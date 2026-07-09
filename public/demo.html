@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LumaDeck Product Demo — See It In Action</title>
+<meta name="description" content="Watch a full LumaDeck walkthrough: connect your lights, build a show on the timeline, let The Shaman generate one automatically, and press play to sync your whole room to the screen.">
+<link rel="icon" href="assets/img/lumadeck-icon.png">
+<link rel="apple-touch-icon" href="assets/img/lumadeck-icon.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<style>
+  body { overflow-x: hidden; }
+  .ld-ambient { position: absolute; }
+
+  .demo-wrap { position: relative; min-height: 100vh; overflow: hidden; }
+  .demo-content { position: relative; z-index: 10; max-width: 1120px; margin: 0 auto; padding: 34px 40px 80px; }
+
+  .demo-head { text-align: center; max-width: 680px; margin: 0 auto 34px; }
+  .demo-head h1 { font-size: clamp(34px,4.6vw,58px); line-height: 1.03; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 16px; }
+  .demo-head p { font-size: clamp(16px,1.6vw,19px); line-height: 1.5; color: var(--text-secondary); margin: 0; }
+  .demo-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border: 1px solid var(--border-default); border-radius: 999px; background: rgba(20,20,22,0.5); margin-bottom: 22px; }
+  .demo-pill span { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
+
+  .video-shell { position: relative; max-width: 960px; margin: 0 auto; border-radius: 24px; overflow: hidden; border: 1px solid var(--border-default); box-shadow: var(--shadow-lg), var(--glow-amber-soft); }
+  .video-stage { position: relative; width: 100%; aspect-ratio: 16/9; background: radial-gradient(120% 120% at 50% 0%, var(--ink-800), var(--ink-900) 70%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .video-stage iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-wash { position: absolute; inset: 0; background: var(--gradient-brand); background-size: 200% auto; opacity: 0.1; animation: ld-shimmer 9s linear infinite; }
+  .video-face { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 24px; }
+  .play-btn { width: 88px; height: 88px; border: none; cursor: pointer; border-radius: 50%; background: var(--gradient-amber); color: var(--on-accent); display: inline-flex; align-items: center; justify-content: center; animation: ld-pulse 2.6s ease-in-out infinite; margin-bottom: 22px; transition: transform var(--duration-fast) var(--ease-standard); }
+  .play-btn:hover { animation-play-state: paused; transform: scale(1.08); }
+  .yt-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(10,10,11,0.55); border: 1px solid var(--border-default); margin-bottom: 12px; }
+  .yt-tag span { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-secondary); }
+  .video-face .hint { margin: 0; font-size: 13px; color: var(--text-tertiary); font-family: var(--font-mono); }
+  .fake-controls { position: absolute; left: 0; right: 0; bottom: 0; height: 44px; background: linear-gradient(0deg, rgba(10,10,11,0.85), transparent); display: flex; align-items: center; gap: 12px; padding: 0 16px; }
+  .fake-controls .prog { flex: 1; height: 4px; border-radius: 999px; background: var(--ink-600); position: relative; overflow: hidden; }
+  .fake-controls .prog i { position: absolute; left: 0; top: 0; bottom: 0; width: 12%; background: var(--accent); border-radius: 999px; }
+  .fake-controls .t { font-size: 11px; color: var(--text-tertiary); font-family: var(--font-mono); }
+
+  /* Coming Soon state (shown until a YouTube ID is added) */
+  .cs-face { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px; }
+  .cs-glyph { display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 20px; background: var(--amber-tint); color: var(--accent); margin-bottom: 20px; box-shadow: var(--glow-amber-soft); }
+  .cs-title { font-size: clamp(30px,5vw,52px); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; line-height: 1; margin-bottom: 14px; }
+  .cs-sub { margin: 0; max-width: 440px; font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+
+  .chapters { max-width: 960px; margin: 26px auto 0; }
+  .chapters .lbl { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 12px; text-align: center; }
+  .chapter-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 12px; }
+  .chapter { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; }
+  .chapter .ts { font-family: var(--font-mono); font-size: 12px; color: var(--accent); flex: none; }
+  .chapter .cap { font-size: 14px; color: var(--text-secondary); }
+
+  .demo-cta { max-width: 960px; margin: 34px auto 0; padding: 28px 32px; background: var(--surface-panel); border: 1px solid var(--border-default); border-radius: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+  .demo-cta h3 { margin: 0 0 4px; font-size: 20px; color: var(--text-primary); }
+  .demo-cta p { margin: 0; font-size: 14px; color: var(--text-secondary); }
+
+  @media (max-width: 560px) { .demo-content { padding: 24px 20px 64px; } }
+</style>
+</head>
+<body>
+<div class="demo-wrap">
+
+  <!-- ambient glow -->
+  <div class="ld-ambient" aria-hidden="true">
+    <span class="g-magenta"></span>
+    <span class="g-amber"></span>
+    <span class="g-cyan"></span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="ld-header scrimmed">
+    <div class="ld-header-inner">
+      <a class="ld-brand" href="index.html">
+        <img src="assets/img/lumadeck-icon.png" alt="LumaDeck">
+        <span>LumaDeck</span>
+      </a>
+      <span class="ld-divider"></span>
+      <span class="ld-header-label">Product Demo</span>
+      <div class="ld-spacer"></div>
+      <a class="ld-backlink" href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to site
+      </a>
+      <a class="ld-download" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">Download</a>
+    </div>
+  </header>
+
+  <!-- CONTENT -->
+  <div class="demo-content">
+    <div class="demo-head">
+      <div class="demo-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="color:var(--accent);" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Explainer Video · 2 min</span>
+      </div>
+      <h1>See LumaDeck <span class="ld-gradient-text">in action</span>.</h1>
+      <p>Watch a full walkthrough: connect your lights, build a show on the timeline, let The Shaman generate one automatically, and press play to sync your whole room to the screen.</p>
+    </div>
+
+    <!-- VIDEO (16:9) -->
+    <div class="video-shell">
+      <div class="video-stage" id="videoStage">
+        <div class="video-wash" aria-hidden="true"></div>
+        <div class="cs-face">
+          <span class="cs-glyph">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <div class="cs-title ld-gradient-text">Coming Soon</div>
+          <p class="cs-sub">Our full LumaDeck walkthrough is in production. Check back soon — or download the app and start building light shows now.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapters (revealed automatically once a video ID is set) -->
+    <div class="chapters" id="walkthrough" hidden>
+      <div class="lbl">In this walkthrough</div>
+      <div class="chapter-grid">
+        <div class="chapter"><span class="ts">0:00</span><span class="cap">Connect your lights</span></div>
+        <div class="chapter"><span class="ts">0:28</span><span class="cap">Build a show on the timeline</span></div>
+        <div class="chapter"><span class="ts">1:05</span><span class="cap">Auto-generate with The Shaman</span></div>
+        <div class="chapter"><span class="ts">1:40</span><span class="cap">Press play &amp; cast to TV</span></div>
+      </div>
+    </div>
+
+    <!-- footer cta -->
+    <div class="demo-cta">
+      <div>
+        <h3>Try it yourself.</h3>
+        <p>Free on iPhone, iPad and Mac.</p>
+      </div>
+      <a class="ld-appstore sm" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.2 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.8zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2-.5 2.7-1.3z"/></svg>
+        <span class="as-stack"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // ============================================================
+  // To go live: paste the YouTube video ID between the quotes.
+  // Example:  var VIDEO_ID = "dQw4w9WgXcQ";
+  // While it's empty, the page shows the "Coming Soon" state and
+  // the walkthrough chapters stay hidden. Set the ID and both the
+  // video player and the chapters return automatically.
+  // ============================================================
+  var VIDEO_ID = "";
+
+  if (!VIDEO_ID) return; // keep the Coming Soon state
+
+  var stage = document.getElementById('videoStage');
+  var walkthrough = document.getElementById('walkthrough');
+  if (walkthrough) walkthrough.hidden = false;
+
+  // Swap the Coming Soon panel for the click-to-play video facade.
+  stage.innerHTML =
+    '<div class="video-wash" aria-hidden="true"></div>' +
+    '<div class="video-face">' +
+      '<button class="play-btn" type="button" id="playBtn" aria-label="Play explainer video">' +
+        '<svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" style="margin-left:4px;" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4"/></svg>' +
+      '</button>' +
+    '</div>' +
+    '<div class="fake-controls" aria-hidden="true">' +
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="color:var(--text-secondary);"><polygon points="6 4 20 12 6 20 6 4"/></svg>' +
+      '<div class="prog"><i></i></div><span class="t">0:00 / 2:00</span>' +
+    '</div>';
+
+  document.getElementById('playBtn').addEventListener('click', function () {
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(VIDEO_ID) + '?autoplay=1&rel=0';
+    iframe.title = 'LumaDeck explainer video';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    stage.innerHTML = '';
+    stage.appendChild(iframe);
+  });
+})();
+</script>
+</body>
+</html>

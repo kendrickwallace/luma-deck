@@ -1,0 +1,296 @@
+/* LumaDeck theme — bundled design-system tokens (colors, typography, spacing, effects, base) */
+
+/* ============================================================
+   LumaDeck — Color Tokens
+   Dark, high-tech surfaces with a warm amber-orange accent and
+   a vibrant neon brand spectrum (cyan → magenta → orange).
+   ============================================================ */
+
+:root {
+  /* ---- Base neutrals (near-black surfaces, lifted panels) ---- */
+  --black: #000000;
+  --ink-900: #0a0a0b;   /* app background */
+  --ink-850: #0e0e10;   /* deep panel */
+  --ink-800: #141416;   /* panel / card */
+  --ink-750: #1a1a1d;   /* raised card */
+  --ink-700: #202024;   /* control track / inset */
+  --ink-600: #2a2a2e;   /* segmented control bg */
+  --ink-500: #38383c;   /* hairline-strong / active segment */
+  --ink-400: #48484c;   /* disabled surface */
+
+  /* ---- Text ---- */
+  --text-primary:   #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.62);
+  --text-tertiary:  rgba(255, 255, 255, 0.40);
+  --text-quaternary:rgba(255, 255, 255, 0.24);
+  --text-on-accent: #1a1206;
+
+  /* ---- Hairlines & borders ---- */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.20);
+
+  /* ---- Primary accent: warm amber-orange ---- */
+  --amber-100: #fbe3c9;
+  --amber-300: #f4b878;
+  --amber-500: #e8944a;   /* PRIMARY — play buttons, sliders, active */
+  --amber-600: #d9823a;
+  --amber-700: #b96826;
+  --amber-glow: rgba(232, 148, 74, 0.45);
+  --amber-tint: rgba(232, 148, 74, 0.14);   /* selected-row fill */
+
+  /* ---- Neon brand spectrum (logo / hero gradient) ---- */
+  --neon-cyan:    #22d3ee;
+  --neon-blue:    #3b82f6;
+  --neon-magenta: #d946ef;
+  --neon-pink:    #f472b6;
+  --neon-orange:  #fb923c;
+
+  /* ---- Semantic status ---- */
+  --success: #34c759;   /* connected / verified / active block */
+  --success-tint: rgba(52, 199, 89, 0.16);
+  --warning: #ff9f0a;   /* offline / free-tier limit */
+  --danger:  #ff453a;   /* delete / destructive */
+  --info:    #0a84ff;
+
+  /* ---- Per-brand light badges (from the app) ---- */
+  --brand-hue:     #3b82f6;   /* Philips Hue — blue */
+  --brand-wiz:     #34c759;   /* WiZ — green */
+  --brand-lifx:    #af52de;   /* LIFX — purple */
+  --brand-homekit: #2dd4bf;   /* HomeKit / Matter — teal */
+  --brand-govee:   #ff9500;   /* Govee — orange */
+
+  /* ---- Light-temperature presets (Control tab) ---- */
+  --preset-warm:    #f5cf9a;
+  --preset-neutral: #f7ecd8;
+  --preset-cool:    #bfe0f5;
+  --preset-red:     #e23b34;
+  --preset-amber:   #eb9a2f;
+  --preset-green:   #34c759;
+
+  /* ============================================================
+     Semantic aliases — prefer these in components
+     ============================================================ */
+  --bg-app:        var(--ink-900);
+  --surface-panel: var(--ink-800);
+  --surface-card:  var(--ink-750);
+  --surface-inset: var(--ink-700);
+  --surface-segment: var(--ink-600);
+
+  --accent:        var(--amber-500);
+  --accent-hover:  var(--amber-600);
+  --accent-quiet:  var(--amber-tint);
+  --on-accent:     var(--text-on-accent);
+
+  --focus-ring:    var(--amber-500);
+  --selection-border: var(--amber-500);
+}
+
+/* ============================================================
+   LumaDeck — Typography Tokens
+   LumaDeck is a native iOS / macOS app; its type is Apple's
+   San Francisco (SF Pro Text / Display) with SF Mono for numeric
+   readouts (timers, timestamps, Kelvin values). No webfont is
+   bundled — the system stack resolves to real SF Pro on Apple
+   platforms and to a close grotesque elsewhere. See readme.md.
+   ============================================================ */
+
+:root {
+  /* ---- Families ---- */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+               "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+               "Helvetica Neue", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "SFMono-Regular", "Menlo", monospace;
+
+  /* ---- Weights ---- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---- Type scale (px) ---- */
+  --text-display: 34px;   /* hero / big timer readout */
+  --text-title-1: 28px;   /* screen title */
+  --text-title-2: 22px;   /* section hero (zone header) */
+  --text-title-3: 20px;   /* panel title (All Lights) */
+  --text-headline: 17px;  /* row title, emphasized body */
+  --text-body: 16px;      /* default body */
+  --text-callout: 15px;   /* secondary body */
+  --text-subhead: 14px;   /* labels, list subtitle */
+  --text-footnote: 13px;  /* metadata, captions */
+  --text-caption: 12px;   /* badge, tiny meta */
+  --text-micro: 11px;     /* uppercase eyebrow / section header */
+
+  /* ---- Line heights ---- */
+  --leading-tight: 1.1;
+  --leading-snug: 1.25;
+  --leading-normal: 1.4;
+  --leading-relaxed: 1.55;
+
+  /* ---- Letter spacing ---- */
+  --tracking-tight: -0.02em;   /* display / titles */
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-eyebrow: 0.08em;  /* UPPERCASE section headers (ZONES, SHOWS) */
+
+  /* ---- Semantic aliases ---- */
+  --font-ui: var(--font-sans);
+  --font-numeric: var(--font-mono);
+}
+
+/* ============================================================
+   LumaDeck — Spacing, Radii & Layout Tokens
+   Apple-style 4pt grid with generously rounded, capsule-heavy
+   controls. Panels are large-radius cards; pills are fully round.
+   ============================================================ */
+
+:root {
+  /* ---- Spacing scale (4pt grid) ---- */
+  --space-0: 0;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --space-6: 20px;
+  --space-7: 24px;
+  --space-8: 32px;
+  --space-9: 40px;
+  --space-10: 48px;
+  --space-12: 64px;
+
+  /* ---- Corner radii ---- */
+  --radius-xs: 6px;    /* small tags, inline chips */
+  --radius-sm: 10px;   /* buttons, inputs */
+  --radius-md: 14px;   /* tiles, list rows */
+  --radius-lg: 18px;   /* cards */
+  --radius-xl: 24px;   /* large panels */
+  --radius-2xl: 28px;  /* hero banners */
+  --radius-pill: 999px;/* segmented controls, badges, nav bar */
+  --radius-circle: 50%;
+
+  /* ---- Control sizing ---- */
+  --control-height-sm: 32px;
+  --control-height-md: 40px;
+  --control-height-lg: 48px;
+  --tap-target: 44px;     /* minimum touch target */
+  --track-height: 6px;    /* slider track */
+  --thumb-size: 22px;     /* slider / switch thumb */
+
+  /* ---- Layout ---- */
+  --gutter: 20px;
+  --panel-pad: 20px;
+  --nav-height: 44px;
+  --content-max: 1440px;
+}
+
+/* ============================================================
+   LumaDeck — Effects: shadows, glows, blur, gradients, motion
+   The signature move is the warm neon GLOW: accent-colored
+   box-shadows on active controls, plus the multi-hue brand
+   gradient used for the logo and hero moments.
+   ============================================================ */
+
+:root {
+  /* ---- Elevation shadows (on near-black, kept subtle) ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.55);
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+                  0 8px 28px rgba(0, 0, 0, 0.5);
+
+  /* ---- Signature glows ---- */
+  --glow-amber: 0 0 0 1px rgba(232, 148, 74, 0.5),
+                0 0 22px rgba(232, 148, 74, 0.4);
+  --glow-amber-soft: 0 0 18px rgba(232, 148, 74, 0.35);
+  --glow-cyan: 0 0 20px rgba(34, 211, 238, 0.5);
+  --glow-magenta: 0 0 20px rgba(217, 70, 239, 0.5);
+  --glow-success: 0 0 12px rgba(52, 199, 89, 0.6);
+
+  /* Selection ring used on tiles / rows when active */
+  --ring-selected: 0 0 0 2px var(--amber-500), 0 0 18px rgba(232, 148, 74, 0.35);
+
+  /* ---- Blur (translucent overlays, nav pill, sheets) ---- */
+  --blur-thin: blur(12px);    /* @kind other */
+  --blur-regular: blur(24px); /* @kind other */
+  --blur-thick: blur(40px);   /* @kind other */
+
+  /* ---- Signature gradients ---- */
+  --gradient-brand: linear-gradient(100deg,
+      #22d3ee 0%, #3b82f6 26%, #d946ef 60%, #fb923c 100%); /* @kind color */
+  --gradient-brand-soft: linear-gradient(100deg,
+      rgba(34,211,238,0.9), rgba(217,70,239,0.9), rgba(251,146,60,0.9)); /* @kind color */
+  --gradient-amber: linear-gradient(180deg, #f4b878 0%, #e8944a 100%); /* @kind color */
+  --gradient-fire: linear-gradient(180deg, #f4b878 0%, #e23b34 100%); /* @kind color */
+  --gradient-temp: linear-gradient(90deg, #f5cf9a 0%, #f7ecd8 50%, #bfe0f5 100%); /* @kind color */
+  --gradient-panel-veil: linear-gradient(180deg,
+      rgba(255,255,255,0.04), rgba(255,255,255,0)); /* @kind color */
+  /* protection scrim for text over imagery/video */
+  --scrim-bottom: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.75) 100%); /* @kind color */
+
+  /* ---- Motion ---- */
+  --ease-standard: cubic-bezier(0.32, 0.72, 0, 1);   /* @kind other */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);   /* @kind other */
+  --duration-fast: 120ms;   /* @kind other */
+  --duration-base: 220ms;   /* @kind other */
+  --duration-slow: 360ms;   /* @kind other */
+}
+
+/* ============================================================
+   LumaDeck — Base reset & app defaults
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6, p { margin: 0; }
+
+/* Numeric readouts (timers, timestamps, Kelvin) use SF Mono */
+.tabular, time, .readout {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+a:hover { color: var(--amber-300); }
+
+::selection {
+  background: var(--amber-tint);
+  color: var(--text-primary);
+}
+
+/* Custom scrollbars to match dark surfaces */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--ink-600);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}

@@ -1,0 +1,10 @@
+# OS cruft
+.DS_Store
+**/.DS_Store
+
+# Design handoff & source material — kept locally, not part of the deployed site.
+# (87 MB of prototypes, source images, and the handoff zip.)
+docs/
+
+# Dependencies (none currently, but just in case)
+node_modules/

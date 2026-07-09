@@ -1,0 +1,141 @@
+/* ============================================================
+   LumaDeck website — shared component styles
+   Built on theme.css design-system tokens. Recreates the
+   Claude Design prototype as dependency-free static markup.
+   ============================================================ */
+
+body {
+  margin: 0;
+  background: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+::selection { background: var(--amber-tint); }
+img { max-width: 100%; }
+
+/* ---- Keyframes (from prototype) ---- */
+@keyframes ld-float  { 0%,100% { transform: translate3d(0,0,0) scale(1); opacity: .5; }  50% { transform: translate3d(0,-26px,0) scale(1.12); opacity: .8; } }
+@keyframes ld-float2 { 0%,100% { transform: translate3d(0,0,0) scale(1); opacity: .38; } 50% { transform: translate3d(18px,20px,0) scale(1.15); opacity: .65; } }
+@keyframes ld-shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+@keyframes ld-riseIn  { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes ld-bob     { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+@keyframes ld-pulse   { 0%,100% { transform: scale(1); box-shadow: var(--glow-amber-soft); } 50% { transform: scale(1.06); box-shadow: var(--glow-amber); } }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* ---- Ambient persistent glow backdrop ---- */
+.ld-ambient { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+.ld-ambient span { position: absolute; border-radius: 50%; }
+.ld-ambient .g-magenta { top: 8%; left: 6%; width: 360px; height: 360px; background: radial-gradient(circle, var(--neon-magenta), transparent 68%); filter: blur(36px); animation: ld-float2 13s ease-in-out infinite; }
+.ld-ambient .g-amber   { bottom: 6%; right: 5%; width: 440px; height: 440px; background: radial-gradient(circle, var(--amber-500), transparent 66%); filter: blur(40px); animation: ld-float 11s ease-in-out infinite; }
+.ld-ambient .g-cyan    { top: 2%; right: 30%; width: 300px; height: 300px; background: radial-gradient(circle, var(--neon-cyan), transparent 70%); filter: blur(34px); animation: ld-float 15s ease-in-out infinite 1s; }
+
+/* ---- Gradient brand text ---- */
+.ld-gradient-text {
+  background: var(--gradient-brand); background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: ld-shimmer 6s linear infinite;
+}
+
+/* ---- Eyebrows ---- */
+.ld-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); }
+.ld-eyebrow.accent { color: var(--accent); }
+
+/* ---- Header (glass pill) ---- */
+.ld-header { position: sticky; top: 0; z-index: 60; display: flex; justify-content: center; padding: 16px 20px; }
+.ld-header.floating { position: absolute; top: 0; left: 0; right: 0; background: none; pointer-events: none; padding: 18px 20px; }
+.ld-header.scrimmed { background: linear-gradient(180deg, var(--bg-app) 60%, transparent); }
+.ld-header-inner {
+  pointer-events: auto; display: flex; align-items: center; gap: 16px;
+  width: 100%; max-width: 1240px;
+  padding: 8px 8px 8px 16px;
+  background: rgba(20,20,22,0.78);
+  backdrop-filter: var(--blur-regular); -webkit-backdrop-filter: var(--blur-regular);
+  border: 1px solid var(--border-default); border-radius: 999px; box-shadow: var(--shadow-md);
+}
+.ld-header.floating .ld-header-inner { width: auto; gap: 20px; }
+.ld-brand { display: flex; align-items: center; gap: 10px; background: none; border: none; cursor: pointer; color: var(--text-primary); font-family: var(--font-sans); }
+.ld-brand img { width: 30px; height: 30px; border-radius: 8px; display: block; }
+.ld-brand span { font-weight: 700; font-size: 17px; letter-spacing: -0.02em; }
+.ld-divider { width: 1px; height: 20px; background: var(--border-default); flex: none; }
+.ld-header-label { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+.ld-spacer { flex: 1; }
+
+.ld-navlinks { display: flex; align-items: center; gap: 2px; }
+.ld-navlink {
+  background: transparent; color: var(--text-secondary); border: none; cursor: pointer;
+  font-family: var(--font-sans); font-weight: 500; font-size: 14px;
+  padding: 8px 13px; border-radius: 999px;
+  transition: background var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard);
+}
+.ld-navlink:hover { color: var(--text-primary); }
+.ld-navlink.active { background: var(--amber-tint); color: var(--accent); font-weight: 600; }
+
+.ld-download {
+  display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 18px;
+  background: var(--accent); color: var(--on-accent); font-weight: 600; font-size: 14px;
+  border-radius: 999px; box-shadow: var(--glow-amber-soft); white-space: nowrap;
+}
+.ld-download:hover { color: var(--on-accent); background: var(--accent-hover); }
+
+.ld-backlink {
+  display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 16px;
+  color: var(--text-secondary); font-size: 14px; font-weight: 500;
+  border-radius: 999px; border: 1px solid var(--border-default);
+}
+.ld-backlink:hover { color: var(--text-primary); }
+
+/* ---- App Store button (large gradient) ---- */
+.ld-appstore {
+  display: inline-flex; align-items: center; gap: 12px; height: 58px; padding: 0 26px 0 22px;
+  background: var(--gradient-amber); color: var(--on-accent); border-radius: 16px;
+  box-shadow: var(--glow-amber); transition: transform var(--duration-fast) var(--ease-standard);
+}
+.ld-appstore:hover { transform: translateY(-2px); color: var(--on-accent); }
+.ld-appstore.sm { height: 54px; }
+.ld-appstore .as-stack { display: flex; flex-direction: column; line-height: 1.05; text-align: left; }
+.ld-appstore .as-small { font-size: 11px; font-weight: 600; opacity: .85; }
+.ld-appstore .as-big { font-size: 19px; font-weight: 700; letter-spacing: -0.02em; }
+
+/* ---- Amber solid button ---- */
+.ld-btn-amber {
+  display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 22px;
+  background: var(--accent); color: var(--on-accent); font-weight: 600; font-size: 15px;
+  border-radius: 12px; box-shadow: var(--glow-amber-soft);
+}
+.ld-btn-amber:hover { color: var(--on-accent); background: var(--accent-hover); }
+
+/* ---- Outline pill link (User Manual / Product Demo buttons) ---- */
+.ld-outline {
+  display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px;
+  border: 1px solid var(--border-default); color: var(--text-secondary); font-size: 14px; font-weight: 500;
+  transition: border-color var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard);
+}
+.ld-outline:hover { color: var(--text-primary); border-color: var(--accent); }
+
+/* ---- Brand badges (reimplemented from DS Badge component) ---- */
+.ld-badge {
+  display: inline-flex; align-items: center; height: 22px; padding: 0 9px;
+  border-radius: 999px; font: var(--weight-bold) var(--text-caption)/1 var(--font-sans);
+  letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap;
+}
+.ld-badge.hue     { color: var(--brand-hue);     background: color-mix(in srgb, var(--brand-hue) 16%, transparent);     border: 1px solid color-mix(in srgb, var(--brand-hue) 40%, transparent); }
+.ld-badge.wiz     { color: var(--brand-wiz);     background: color-mix(in srgb, var(--brand-wiz) 16%, transparent);     border: 1px solid color-mix(in srgb, var(--brand-wiz) 40%, transparent); }
+.ld-badge.lifx    { color: var(--brand-lifx);    background: color-mix(in srgb, var(--brand-lifx) 16%, transparent);    border: 1px solid color-mix(in srgb, var(--brand-lifx) 40%, transparent); }
+.ld-badge.homekit { color: var(--brand-homekit); background: color-mix(in srgb, var(--brand-homekit) 16%, transparent); border: 1px solid color-mix(in srgb, var(--brand-homekit) 40%, transparent); }
+.ld-badge.govee   { color: var(--brand-govee);   background: color-mix(in srgb, var(--brand-govee) 16%, transparent);   border: 1px solid color-mix(in srgb, var(--brand-govee) 40%, transparent); }
+
+/* ---- Status pill (green dot + label) ---- */
+.ld-statuspill {
+  display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
+  border: 1px solid var(--border-default); border-radius: 999px; background: rgba(20,20,22,0.5);
+}
+.ld-statuspill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); box-shadow: var(--glow-success); flex: none; }
+.ld-statuspill .label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }

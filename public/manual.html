@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LumaDeck User Manual — Connect, Build &amp; Play Your Light Shows</title>
+<meta name="description" content="The complete LumaDeck user manual: a five-minute quickstart plus the full reference for every tab — connect your lights, build a show, and press play.">
+<link rel="icon" href="assets/img/lumadeck-icon.png">
+<link rel="apple-touch-icon" href="assets/img/lumadeck-icon.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<style>
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg-app); }
+
+  .ld-doc h2 { font-size: clamp(24px,2.6vw,34px); line-height: 1.12; letter-spacing: -0.02em; font-weight: 700; margin: 0 0 8px; }
+  .ld-doc h3 { font-size: 19px; font-weight: 650; letter-spacing: -0.01em; margin: 26px 0 10px; color: var(--text-primary); }
+  .ld-doc h4 { font-size: 15px; font-weight: 600; letter-spacing: 0.01em; margin: 20px 0 8px; color: var(--text-secondary); }
+  .ld-doc p { font-size: 15px; line-height: 1.62; color: var(--text-secondary); margin: 0 0 12px; }
+  .ld-doc ol, .ld-doc ul { margin: 0 0 14px; padding-left: 20px; }
+  .ld-doc li { font-size: 15px; line-height: 1.6; color: var(--text-secondary); margin: 0 0 7px; }
+  .ld-doc li::marker { color: var(--accent); font-family: var(--font-mono); font-size: 13px; }
+  .ld-doc strong { color: var(--text-primary); font-weight: 600; }
+  .ld-doc code { font-family: var(--font-mono); font-size: 0.88em; background: var(--surface-inset); padding: 2px 6px; border-radius: 6px; color: var(--amber-300); }
+
+  .ld-tbl { width: 100%; border-collapse: collapse; margin: 6px 0 18px; font-size: 14px; border: 1px solid var(--border-subtle); border-radius: 12px; overflow: hidden; }
+  .ld-tbl th { text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-tertiary); padding: 11px 14px; background: var(--surface-segment); border-bottom: 1px solid var(--border-subtle); }
+  .ld-tbl td { padding: 11px 14px; color: var(--text-secondary); line-height: 1.45; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+  .ld-tbl tr:last-child td { border-bottom: none; }
+  .ld-tbl td:first-child { color: var(--text-primary); font-weight: 550; }
+  .tbl-scroll { overflow-x: auto; }
+
+  .ld-toc-link { display: block; padding: 6px 12px; border-radius: 8px; font-size: 13.5px; color: var(--text-tertiary); border-left: 2px solid transparent; transition: color var(--duration-fast) var(--ease-standard), background var(--duration-fast) var(--ease-standard); }
+  .ld-toc-link:hover { color: var(--text-secondary); background: var(--surface-card); }
+  .ld-toc-link.active { color: var(--accent); border-left-color: var(--accent); background: var(--amber-tint); }
+  .toc-group { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); padding: 6px 12px 8px; }
+
+  .part-badge { display: inline-flex; align-items: center; gap: 8px; padding: 5px 12px; border-radius: 999px; background: var(--surface-card); border: 1px solid var(--border-subtle); margin-bottom: 22px; }
+  .part-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: var(--glow-amber-soft); }
+  .part-badge span.txt { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-secondary); }
+
+  .tip { padding: 14px 18px; background: var(--amber-tint); border: 1px solid var(--border-subtle); border-left: 3px solid var(--accent); border-radius: 10px; }
+  .tip p { margin: 0; color: var(--text-secondary); font-size: 14px; }
+  .note-warn { padding: 14px 18px; background: var(--surface-inset); border: 1px solid var(--border-subtle); border-left: 3px solid var(--warning); border-radius: 10px; margin: 8px 0 14px; }
+  .note-warn p { margin: 0; color: var(--text-secondary); font-size: 14px; }
+  .card-lite { padding: 18px 20px; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 14px; }
+  .card-lite .k { font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px; }
+  .card-lite p { margin: 0; font-size: 14px; }
+  .card-lite h4 { margin: 0 0 8px; color: var(--text-primary); }
+
+  .title-band { max-width: 1240px; margin: 0 auto; padding: 28px 40px 8px; }
+  .title-band h1 { font-size: clamp(34px,4.4vw,54px); line-height: 1.04; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 14px; }
+  .title-band .lead { font-size: 17px; line-height: 1.5; color: var(--text-secondary); max-width: 640px; margin: 0; }
+
+  .doc-grid { max-width: 1240px; margin: 0 auto; padding: 20px 40px 100px; display: grid; grid-template-columns: 236px 1fr; gap: 44px; align-items: start; }
+  nav.toc { position: sticky; top: 92px; align-self: start; max-height: calc(100vh - 112px); overflow-y: auto; padding-right: 6px; display: grid; gap: 2px; }
+  section[id] { scroll-margin-top: 100px; margin-bottom: 40px; }
+
+  .doc-cta { margin-top: 40px; padding: 28px 32px; background: var(--surface-panel); border: 1px solid var(--border-default); border-radius: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+  .doc-cta h3 { margin: 0 0 4px; font-size: 20px; color: var(--text-primary); }
+  .doc-cta p { margin: 0; font-size: 14px; }
+
+  @media (max-width: 860px) {
+    .doc-grid { grid-template-columns: 1fr; padding: 16px 20px 72px; gap: 0; }
+    nav.toc { display: none; }
+    .title-band { padding: 20px 20px 8px; }
+  }
+</style>
+</head>
+<body>
+<div style="min-height:100vh; background:var(--bg-app);">
+
+  <!-- HEADER -->
+  <header class="ld-header scrimmed">
+    <div class="ld-header-inner">
+      <a class="ld-brand" href="index.html">
+        <img src="assets/img/lumadeck-icon.png" alt="LumaDeck">
+        <span>LumaDeck</span>
+      </a>
+      <span class="ld-divider"></span>
+      <span class="ld-header-label">User Manual</span>
+      <div class="ld-spacer"></div>
+      <a class="ld-backlink" href="index.html">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        Back to site
+      </a>
+      <a class="ld-download" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">Download</a>
+    </div>
+  </header>
+
+  <!-- TITLE BAND -->
+  <div class="title-band">
+    <div class="ld-eyebrow accent" style="margin-bottom:12px;">Documentation</div>
+    <h1>LumaDeck User Manual</h1>
+    <p class="lead">Everything you need to connect your lights, build a show, and press play — from a five-minute quickstart to the full reference for every tab.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:20px;">
+      <span class="ld-eyebrow" style="margin-right:4px;">Supported</span>
+      <span class="ld-badge hue">Hue</span>
+      <span class="ld-badge wiz">WiZ</span>
+      <span class="ld-badge lifx">LIFX</span>
+      <span class="ld-badge homekit">HomeKit</span>
+      <span class="ld-badge govee">Govee</span>
+    </div>
+  </div>
+
+  <!-- BODY GRID -->
+  <div class="doc-grid">
+
+    <!-- SIDEBAR TOC -->
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-group">Quickstart</div>
+      <a class="ld-toc-link" href="#welcome">Welcome</a>
+      <a class="ld-toc-link" href="#connect">Connect Your Lights</a>
+      <a class="ld-toc-link" href="#first-show">Create Your First Show</a>
+      <a class="ld-toc-link" href="#play">Play Your Light Show</a>
+      <a class="ld-toc-link" href="#tips">Tips</a>
+      <div class="toc-group" style="padding-top:14px;">Reference</div>
+      <a class="ld-toc-link" href="#intro">Introduction</a>
+      <a class="ld-toc-link" href="#lighting">Lighting Tab</a>
+      <a class="ld-toc-link" href="#library">Library Tab</a>
+      <a class="ld-toc-link" href="#play-tab">Play Tab</a>
+      <a class="ld-toc-link" href="#store">Store Tab</a>
+      <a class="ld-toc-link" href="#settings">Settings Tab</a>
+      <a class="ld-toc-link" href="#control">Control Tab</a>
+      <a class="ld-toc-link" href="#workflows">Workflows &amp; Recipes</a>
+      <div class="toc-group" style="padding-top:14px;">Appendices</div>
+      <a class="ld-toc-link" href="#trouble">Troubleshooting</a>
+      <a class="ld-toc-link" href="#hardware">Supported Hardware</a>
+      <a class="ld-toc-link" href="#glossary">Glossary</a>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="ld-doc" style="min-width:0;">
+
+      <div class="part-badge"><span class="dot"></span><span class="txt">Part 1 · Quickstart Guide</span></div>
+
+      <section id="welcome">
+        <h2>Welcome to LumaDeck</h2>
+        <p>LumaDeck synchronizes your smart lights with video playback or countdown timers to create immersive light shows.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px; margin-top:16px;">
+          <div class="card-lite">
+            <div class="k">Supported Lights</div>
+            <p>Philips Hue (via bridge), WiZ (Wi-Fi direct), LIFX (Wi-Fi direct), HomeKit / Matter (via Apple Home), and Govee (LAN Control).</p>
+          </div>
+          <div class="card-lite">
+            <div class="k">Supported Platforms</div>
+            <p>iPhone, iPad, and Mac.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="connect">
+        <h2>Connect Your Lights</h2>
+        <ol>
+          <li>Open the <strong>Lighting</strong> tab.</li>
+          <li>Scroll to the brand section for your lights and tap the <strong>Discover</strong> button.</li>
+          <li><strong>For Philips Hue:</strong> The app searches your network for a Hue Bridge. Once found, press the physical link button on top of the bridge, then tap <strong>"I Pressed the Bridge Button"</strong> in the app within 30 seconds.</li>
+          <li><strong>For WiZ or LIFX:</strong> The app broadcasts on your Wi-Fi to find bulbs automatically. No pairing or bridge is required.</li>
+          <li><strong>For HomeKit / Matter:</strong> Tap <strong>Discover HomeKit Lights</strong>. The app reads accessories already set up in your Apple Home app.</li>
+          <li><strong>For Govee:</strong> Enable LAN Control for each device in the Govee app (Device Settings → LAN Control), then tap <strong>Discover Govee Lights</strong>.</li>
+          <li>Your connected lights appear in the <strong>Connected Lights</strong> section, showing each light's name and brand badge.</li>
+        </ol>
+      </section>
+
+      <section id="first-show">
+        <h2>Create Your First Show</h2>
+        <ol>
+          <li>Open the <strong>Library</strong> tab and tap the <strong>+</strong> button, then <strong>Create Show</strong>.</li>
+          <li><strong>Step 1 — Source:</strong> Choose <strong>Video</strong>, <strong>Audio</strong>, or <strong>Timer</strong> mode. For video, select a video from your imported library. For timer, pick a duration (15 minutes to 6 hours).</li>
+          <li><strong>Step 2 — Lights:</strong> Review connection status for your bridges and Wi-Fi lights. Tap <strong>Refresh Status</strong> if you connected a new device after opening the wizard.</li>
+          <li><strong>Step 3 — Group:</strong> Choose which room or light group to control. You can select multiple groups.</li>
+          <li><strong>Step 4 — Timeline:</strong> Scrub through the video preview (or timer timeline). Tap <strong>Add Scene</strong> to assign a scene at that timestamp, or tap <strong>Add Effect</strong> to create a special effect (Thunderstorm, Volcano, Flash, Static, Smart Plug, or Web Request).</li>
+          <li><strong>Step 5 — Triggers</strong> (optional): Add manual trigger buttons for on-demand effects during playback.</li>
+          <li><strong>Step 6 — Review:</strong> Name your show and tap <strong>Save</strong>.</li>
+        </ol>
+      </section>
+
+      <section id="play">
+        <h2>Play Your Light Show</h2>
+        <ol>
+          <li>Open the <strong>Control</strong> tab.</li>
+          <li>In the <strong>SHOWS</strong> section of the zone rail, tap the <strong>play</strong> button next to any show. The app activates the show and opens the Play tab automatically.</li>
+          <li>Press <strong>Play</strong>. The video plays (or the timer counts) and your lights change at each scene trigger point.</li>
+          <li>Use the <strong>Rewind 10s</strong> and <strong>Forward 10s</strong> buttons, or drag the scrubber to navigate.</li>
+          <li>Tap any <strong>manual trigger buttons</strong> at the bottom to fire effects on demand.</li>
+        </ol>
+      </section>
+
+      <section id="tips" style="margin-bottom:52px;">
+        <h2>Tips</h2>
+        <div style="display:grid; gap:10px; margin-top:10px;">
+          <div class="tip"><p><strong>Capture scenes:</strong> In the Lighting tab, set your lights how you like them, then tap <strong>"Capture Current Lighting"</strong> to save that state as a reusable universal scene.</p></div>
+          <div class="tip"><p><strong>External display:</strong> Connect to a TV via AirPlay or HDMI. Video plays full-screen on the TV while your phone becomes the remote control.</p></div>
+          <div class="tip"><p><strong>Timer mode:</strong> No video? Use timer mode for a timed light show — great for meditation, parties, or workouts.</p></div>
+          <div class="tip"><p><strong>Upgrade to Pro:</strong> Unlock unlimited video length, video looping, smart plug control, Apple Shortcuts integration, web request triggers, and video packs in the <strong>Store</strong> tab.</p></div>
+          <div class="tip"><p><strong>The Shaman:</strong> Skip manual timeline scrubbing entirely. Tap the <strong>Shaman</strong> banner at the top of the Library tab to auto-generate a complete lighting timeline — or choose one of six pre-built 1-hour timer themes. The Shaman is a $0.99 add-on.</p></div>
+        </div>
+      </section>
+
+      <div class="part-badge"><span class="dot"></span><span class="txt">Part 2 · Full Reference</span></div>
+
+      <section id="intro">
+        <h2>Chapter 1 · Introduction</h2>
+        <h3>What is LumaDeck?</h3>
+        <p>LumaDeck is an iOS and macOS app that transforms your smart lights into a synchronized light show. You create "shows" that map light scenes to points on a video timeline (or countdown timer), then play them back. As the video plays, your lights automatically change color, brightness, and effects at each trigger point you defined.</p>
+        <h3>Use Cases</h3>
+        <ul>
+          <li><strong>Home theater:</strong> Match your room lighting to the mood of a movie or TV show.</li>
+          <li><strong>Parties:</strong> Run colorful, timed light effects all night with timer mode.</li>
+          <li><strong>Meditation and relaxation:</strong> Use warm, slowly transitioning scenes on a 30-minute timer.</li>
+          <li><strong>DJ events:</strong> Sync dramatic lighting to a video backdrop.</li>
+          <li><strong>Themed experiences:</strong> Create immersive environments for escape rooms, haunted houses, or holiday decorations.</li>
+          <li><strong>Workouts:</strong> Use energetic light changes timed to an interval workout.</li>
+        </ul>
+        <h3>System Requirements</h3>
+        <ul>
+          <li><strong>iOS:</strong> iPhone or iPad. <strong>macOS:</strong> Mac with Apple Silicon or Intel.</li>
+          <li><strong>Network:</strong> All devices must be on the same local Wi-Fi network as your smart lights.</li>
+          <li><strong>Philips Hue:</strong> Requires a Hue Bridge v2 on the same network.</li>
+          <li><strong>WiZ / LIFX:</strong> No bridge required; bulbs connect directly over Wi-Fi.</li>
+          <li><strong>HomeKit / Matter:</strong> Requires an Apple Home hub (HomePod, Apple TV, or iPad); lights must already be set up in the Apple Home app.</li>
+          <li><strong>Govee:</strong> No bridge required; LAN Control must be enabled in the Govee app for each device.</li>
+        </ul>
+        <h3>Free vs. Pro Feature Comparison</h3>
+        <div class="tbl-scroll">
+          <table class="ld-tbl">
+            <thead><tr><th>Feature</th><th>Free</th><th>Pro</th><th>The Shaman</th></tr></thead>
+            <tbody>
+              <tr><td>Video playback duration</td><td>2 min max</td><td>Unlimited</td><td>—</td></tr>
+              <tr><td>Scene sync with lights</td><td>Yes</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Manual triggers</td><td>Yes</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Special effects (Volcano, Thunderstorm, Flash)</td><td>Yes</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Video looping</td><td>No</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Smart plug control</td><td>No</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Web request triggers (ESP devices)</td><td>No</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Apple Shortcuts integration</td><td>No</td><td>Yes</td><td>—</td></tr>
+              <tr><td>Video packs (Store)</td><td>No</td><td>Yes</td><td>—</td></tr>
+              <tr><td>AI-generated timelines (video)</td><td>No</td><td>No</td><td>Yes · $0.99</td></tr>
+              <tr><td>Six pre-built 1-hour timer themes</td><td>No</td><td>No</td><td>Yes · $0.99</td></tr>
+              <tr><td>Energy levels (Chill / Active / Intense)</td><td>No</td><td>No</td><td>Yes · $0.99</td></tr>
+              <tr><td>Color timeline visualization</td><td>No</td><td>No</td><td>Yes · $0.99</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="lighting">
+        <h2>Chapter 2 · Lighting Tab</h2>
+        <p>The Lighting tab is your hub for discovering, connecting, and managing your smart lights across all supported brands. It is also where you capture and organize universal scenes for use in your shows. It is organized into sections: Connected Lights, Scene Library, Philips Hue, WiZ, LIFX, HomeKit / Matter, Govee, and Hue Groups.</p>
+        <h3>Discovering Philips Hue</h3>
+        <p>Tap <strong>Search for Bridges</strong> to scan your network; found bridges appear with their IP address. If a bridge is not found, enter its IP in the <strong>Bridge IP Address</strong> field and tap <strong>Connect</strong>. When you select a bridge, press the large round link button on top of the physical bridge, then tap <strong>"I Pressed the Bridge Button"</strong> within 30 seconds. Once paired, lights, groups, and scenes are fetched automatically.</p>
+        <h3>Discovering WiZ, LIFX &amp; Govee</h3>
+        <p>For WiZ and LIFX, tap <strong>Discover</strong> and the app broadcasts on your Wi-Fi to find bulbs automatically — no bridge required. For Govee, first enable LAN Control per device in the Govee app, then tap <strong>Discover Govee Lights</strong>.</p>
+        <div class="note-warn"><p><strong>Important:</strong> Wi-Fi lights must be powered on and on the same network as your device. Some routers isolate wireless clients (AP isolation) — disable it if lights are not found.</p></div>
+        <h3>HomeKit / Matter</h3>
+        <p>Tap <strong>Discover HomeKit Lights</strong> to read accessories already set up in your Apple Home app. Lights must be added to Apple Home first, and an Apple Home hub must be active on your network. HomeKit/Matter lights work well for scene-based playback; real-time beat sync may have 100–250&nbsp;ms latency depending on your hub.</p>
+        <h3>Scene Library (Universal Scenes)</h3>
+        <p>A <strong>universal scene</strong> is a saved snapshot of light states that can include lights from any brand. To capture one: set your lights to the desired state, tap <strong>"Capture Current Lighting"</strong>, toggle which lights to include, name the scene, and tap <strong>Save Scene</strong>. During playback the app sends commands to each light using the appropriate protocol for its brand — so a single scene can control multiple brands simultaneously.</p>
+      </section>
+
+      <section id="library">
+        <h2>Chapter 3 · Library Tab</h2>
+        <p>The Library tab is where you manage media files (videos and music) and create new shows. It contains The Shaman banner, Purchased Videos, Imported Videos, and Imported Music. Your saved shows live in the Control tab. Use the <strong>+</strong> menu to Create Show, open The Shaman, Import Video / Music, or Import Show.</p>
+        <h3>Show Creator — The 6-Step Wizard</h3>
+        <p>Progress is shown by a step indicator: <strong>Source → Lights → Group → Timeline → Triggers → Review</strong>.</p>
+        <ol>
+          <li><strong>Source:</strong> Video, Audio, or Timer mode (15 min to 6 hours, in 15-minute increments).</li>
+          <li><strong>Lights:</strong> Review connection status per brand. Tap <strong>Refresh Status</strong> after connecting. You can proceed with no brand connected if you have captured universal scenes.</li>
+          <li><strong>Group:</strong> Toggle Hue groups and individual Wi-Fi lights. The app then fetches available Hue scenes and detects smart plugs.</li>
+          <li><strong>Timeline:</strong> Scrub to a timestamp, then <strong>Add Scene</strong> (captured or Hue scenes) or <strong>Add Effect</strong>.</li>
+          <li><strong>Triggers</strong> (optional): Add manual trigger buttons that appear in the Play tab.</li>
+          <li><strong>Review:</strong> Name the show and tap <strong>Save</strong>.</li>
+        </ol>
+        <h4>Special effect types</h4>
+        <div class="tbl-scroll">
+          <table class="ld-tbl">
+            <thead><tr><th>Effect</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td>Thunderstorm</td><td>Random lightning flashes with configurable brightness range, color, and timing interval.</td></tr>
+              <tr><td>Volcano</td><td>Fiery eruption effect with red/orange colors and configurable intensity.</td></tr>
+              <tr><td>Flash</td><td>Quick bright flash with configurable brightness and color.</td></tr>
+              <tr><td>Static</td><td>Hold a specific Hue scene indefinitely until the next trigger.</td></tr>
+              <tr><td>Smart Plug <span style="color:var(--text-tertiary); font-size:12px;">(Pro)</span></td><td>Turn smart plugs ON or OFF at this timestamp.</td></tr>
+              <tr><td>Web Request <span style="color:var(--text-tertiary); font-size:12px;">(Pro)</span></td><td>Send an HTTP GET or POST request to trigger external devices.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>For light-affecting effects you can set a name, brightness range (1–254), effect color, and timing interval (0.5–20&nbsp;s). Tap <strong>Test Effect</strong> to run it on your actual lights for 10 seconds before saving.</p>
+        <h3>The Shaman — AI-Generated Shows</h3>
+        <p>The Shaman ($0.99 add-on) auto-generates a complete lighting timeline from a video or a pre-built timer theme. Choose a source (Video or Timer Theme), a theme, an energy level, and a light group, then tap <strong>Analyze &amp; Generate</strong>.</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin:10px 0 4px;">
+          <div class="tbl-scroll"><table class="ld-tbl" style="margin:0;">
+            <thead><tr><th>Timer Theme</th><th>Mood</th></tr></thead>
+            <tbody>
+              <tr><td>Beach Sunset</td><td>Bright midday → deep orange dusk</td></tr>
+              <tr><td>European Café</td><td>Morning light → candlelit evening</td></tr>
+              <tr><td>Rainforest</td><td>Dawn canopy → rainfall → nightfall</td></tr>
+              <tr><td>Bali Jungle</td><td>Layered lush tropical warmth</td></tr>
+              <tr><td>Rocky Mountain</td><td>Cool, expansive across the day</td></tr>
+              <tr><td>Northern Lights</td><td>Arctic dark → vivid aurora → back</td></tr>
+            </tbody>
+          </table></div>
+          <div class="tbl-scroll"><table class="ld-tbl" style="margin:0;">
+            <thead><tr><th>Energy</th><th>Interval</th><th>Best for</th></tr></thead>
+            <tbody>
+              <tr><td>Chill</td><td>~30&nbsp;s</td><td>Meditation, ambiance</td></tr>
+              <tr><td>Active</td><td>~10&nbsp;s</td><td>Movies, parties</td></tr>
+              <tr><td>Intense</td><td>~3&nbsp;s</td><td>DJ sets, gaming</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <p>The preview screen shows a <strong>Color Timeline</strong> gradient, the generated triggers, and pre-built effect buttons. Tap <strong>Edit Manually</strong> to fine-tune in the Show Creator, or <strong>Save</strong> to finish.</p>
+      </section>
+
+      <section id="play-tab">
+        <h2>Chapter 4 · Play Tab</h2>
+        <p>The Play tab plays your video (or runs your timer) while automatically triggering light changes at each scene point. The active show's name shows under "Now Playing," alongside a status badge — <strong>Bridge Connected</strong> (green) or <strong>Offline Mode</strong> (orange).</p>
+        <h3>Playback controls</h3>
+        <p>A large central <strong>Play/Pause</strong> button, <strong>Rewind 10s</strong>, <strong>Forward 10s</strong>, and a draggable scrubber. On the Free tier, videos over 2 minutes show a "2-minute limit" banner with an Upgrade button. In <strong>Timer mode</strong>, a circular progress ring with a large monospaced elapsed-time display replaces the video area.</p>
+        <h3>Scene Info &amp; automatic triggering</h3>
+        <p>The Scene Info panel shows the current scene, next scene, and countdown. As playback progresses, Hue scenes activate through the bridge with smooth transitions; universal scenes send per-light commands across all brands; special effects run dynamic patterns; and static scenes hold until the next trigger. Seeking the scrubber applies whichever scene should be active at that point.</p>
+        <h3>Manual triggers &amp; external display</h3>
+        <p>Manual trigger buttons appear at the bottom in rows of 3; tapping one fires its effect with a countdown indicator. With an external display connected (AirPlay / HDMI), video plays full-screen on the TV while your device shows "Playing on External Display" and becomes the remote. Manual triggers can also run an Apple Shortcut (Pro).</p>
+      </section>
+
+      <section id="store">
+        <h2>Chapter 5 · Store Tab</h2>
+        <p>The Store tab is where you upgrade to Pro, purchase video packs, and manage purchases. The <strong>Pro Upgrade</strong> unlocks unlimited video duration, looping, smart plug control, web request triggers, Apple Shortcuts, and video packs. Once purchased, a banner shows "Pro Unlocked" with a crown icon.</p>
+        <p>The <strong>Tiki Bundle</strong> (iOS only, non-Pro users) bundles Pro plus two Volcano Video Packs at a discount with a "Best Value" badge. <strong>Video packs</strong> (iOS only) provide professionally produced content, browsable in a 2-column grid, downloadable after purchase. Use <strong>Restore Purchases</strong> after reinstalling or switching devices.</p>
+      </section>
+
+      <section id="settings">
+        <h2>Chapter 6 · Settings Tab</h2>
+        <ul>
+          <li><strong>Appearance:</strong> System, Light, or Dark theme.</li>
+          <li><strong>Purchases:</strong> Pro status (Active / Free) with a crown icon, plus Restore Purchases.</li>
+          <li><strong>Connection:</strong> Auto-connect to Bridge (default on) and read-only Bridge IP.</li>
+          <li><strong>Playback:</strong> Haptic Feedback and Scene Change Notifications (both default on).</li>
+          <li><strong>Storage:</strong> Configuration and video sizes, plus Clear Cache.</li>
+          <li><strong>About:</strong> Version, build number, and GitHub repository link.</li>
+        </ul>
+      </section>
+
+      <section id="control">
+        <h2>Chapter 7 · Control Tab</h2>
+        <p>The Control tab is your live home-automation console. From one screen you browse and control zones, adjust brightness and activate scenes, control individual lights, play a video or music track, schedule scene changes, and launch any saved show. On iPhone it is a single scrollable column; on iPad it is a 4-column split — <strong>Zone Rail | Light Controls | Video Player | Music Player</strong> — with the Scheduler spanning the top.</p>
+        <h3>Zones, scenes &amp; shows</h3>
+        <p>The zone rail lists all connected light groups, each showing a brand icon, name, on/total count (e.g. <code>3 / 5</code>), and an active indicator. It also holds a <strong>Scenes</strong> quick list and a <strong>SHOWS</strong> list — tap a show's play button to activate it and jump to the Play tab.</p>
+        <h3>Light controls &amp; focused light</h3>
+        <p>Selecting a zone reveals a brightness slider, a scene strip, and a light grid. Tap any light to open the <strong>Focused Light Panel</strong> for a power toggle, brightness slider, and color picker — all applied in real time.</p>
+        <h3>Scheduler</h3>
+        <p>The Scheduler activates scenes or security behaviors at set times of day. Each block defines a name, time range (30-minute increments), and an action: <strong>Activate Scene</strong> (applies a universal scene) or <strong>Security Mode</strong> (randomly varies lights to simulate occupancy, with a Slow / Medium / Active slider). Blocks can optionally start a music track, and can be paused without deleting. An active block shows a green dot in the zone rail.</p>
+      </section>
+
+      <section id="workflows">
+        <h2>Chapter 8 · Workflows &amp; Recipes</h2>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:8px;">
+          <div class="card-lite"><h4>Home Theater Movie Night</h4><p>Import your movie, connect living-room lights, add ambient scene changes plus a <strong>Flash</strong> trigger for jump scares, AirPlay to the TV, and launch from the Control tab.</p></div>
+          <div class="card-lite"><h4>Party Countdown</h4><p>Create a 2-hour timer show, add vibrant scene triggers every 5–10 min, and a <strong>Volcano</strong> manual trigger for hype moments. Let it run.</p></div>
+          <div class="card-lite"><h4>Meditation / Relaxation</h4><p>Capture warm, low-brightness scenes, build a 30-minute timer show with transitions 5–10 min apart, skip manual triggers, and play.</p></div>
+          <div class="card-lite"><h4>Multi-Brand Setup</h4><p>Pair Hue, WiZ, and LIFX together, capture universal scenes across all brands, and use them in your timeline — commands fire to every brand at once.</p></div>
+          <div class="card-lite"><h4>Scheduled "Happy Hour"</h4><p>Capture a warm "Happy Hour" scene, enable the Scheduler, add a 5:00–8:00&nbsp;PM block set to Activate Scene, and set it and forget it.</p></div>
+          <div class="card-lite"><h4>Instant Show with The Shaman</h4><p>Import a video, open The Shaman, pick an energy level and group, tap <strong>Analyze &amp; Generate</strong>, and save — a great show with zero manual configuration.</p></div>
+        </div>
+      </section>
+
+      <div class="part-badge"><span class="dot"></span><span class="txt">Appendices</span></div>
+
+      <section id="trouble">
+        <h2>Appendix A · Troubleshooting</h2>
+        <h4>Bridge not found</h4>
+        <p>Ensure the Hue Bridge is powered on and on the same Wi-Fi network. Check your router does not block mDNS or UPnP. Try manual IP entry — find the IP in your router's admin panel or the Hue app.</p>
+        <h4>Wi-Fi lights (WiZ / LIFX / Govee) not discovered</h4>
+        <p>Lights must be powered on and on the same network. Disable AP isolation on your router. For Govee, enable LAN Control per device and wait 10–15&nbsp;seconds before discovering. LIFX uses UDP broadcast and may need a second attempt.</p>
+        <h4>HomeKit lights not appearing</h4>
+        <p>Confirm the lights work in the Apple Home app, an Apple Home hub is online, and LumaDeck has HomeKit access (Settings → Privacy &amp; Security → HomeKit). Expect 100–250&nbsp;ms latency for real-time effects.</p>
+        <h4>Scenes not triggering during playback</h4>
+        <p>Verify the show is active (launched from the Control tab), check the bridge status in the Play tab header, and ensure the lights in a universal scene are powered on.</p>
+        <h4>The Shaman generates too few triggers</h4>
+        <p>Try a higher energy level (Active or Intense). Chill intentionally produces sparse triggers. Ensure the video has visible color or brightness variation.</p>
+      </section>
+
+      <section id="hardware">
+        <h2>Appendix B · Supported Hardware</h2>
+        <div class="tbl-scroll">
+          <table class="ld-tbl">
+            <thead><tr><th>Ecosystem</th><th>What works</th></tr></thead>
+            <tbody>
+              <tr><td>Philips Hue</td><td>Hue Bridge v2 (square). All Hue bulbs, strips, fixtures. Hue Smart Plug (Pro).</td></tr>
+              <tr><td>WiZ</td><td>All WiZ Wi-Fi bulbs and LAN-protocol accessories — no bridge required.</td></tr>
+              <tr><td>LIFX</td><td>All LIFX Wi-Fi bulbs. LAN protocol over UDP, port 56700. No bridge.</td></tr>
+              <tr><td>HomeKit / Matter</td><td>Any HomeKit/Matter light in the Apple Home app (Nanoleaf, Eve, Hue in Matter mode, etc.). Requires an Apple Home hub.</td></tr>
+              <tr><td>Govee</td><td>Govee Wi-Fi bulbs, strips, and panels supporting LAN Control (enable per device).</td></tr>
+              <tr><td>ESP / External <span style="color:var(--text-tertiary); font-size:12px;">(Pro)</span></td><td>Any device accepting HTTP GET/POST — ESP8266/ESP32 for fog machines, motors, relays, props. Configure via Web Request.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="glossary" style="margin-bottom:20px;">
+        <h2>Appendix C · Glossary</h2>
+        <div class="tbl-scroll">
+          <table class="ld-tbl">
+            <thead><tr><th>Term</th><th>Definition</th></tr></thead>
+            <tbody>
+              <tr><td>Show</td><td>A saved file defining a complete light show — source, scene timeline, effects, and manual triggers. Formerly a "Configuration."</td></tr>
+              <tr><td>The Shaman</td><td>LumaDeck's AI show generator. Analyzes a video or timer theme to produce a scene timeline. $0.99 add-on.</td></tr>
+              <tr><td>Energy Level</td><td>A Shaman setting (Chill, Active, Intense) controlling how often and how dramatically scenes change.</td></tr>
+              <tr><td>Universal Scene</td><td>A captured scene that can include lights from multiple brands in one snapshot.</td></tr>
+              <tr><td>Special Scene / Effect</td><td>A dynamic effect (Thunderstorm, Volcano, Flash) that runs an animated pattern rather than a static state.</td></tr>
+              <tr><td>Manual Trigger</td><td>A button you tap during playback to fire an effect on demand.</td></tr>
+              <tr><td>Timer Mode</td><td>A countdown-based show with no video, 15 minutes to 6 hours.</td></tr>
+              <tr><td>Zone</td><td>A light group in the Control tab — a Hue room or a collection of Wi-Fi lights from any brand.</td></tr>
+              <tr><td>Scheduler</td><td>Activates scenes or security behaviors at set times of day, without a running show.</td></tr>
+              <tr><td>Security Mode</td><td>A scheduler action that randomly varies lights to simulate occupancy.</td></tr>
+              <tr><td>Pro</td><td>The premium tier — unlimited duration, looping, plug control, web requests, shortcuts, and video packs.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- footer cta -->
+      <div class="doc-cta">
+        <div>
+          <h3>Ready to build your first show?</h3>
+          <p>Free on iPhone, iPad and Mac.</p>
+        </div>
+        <a class="ld-appstore sm" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.2 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.8zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2-.5 2.7-1.3z"/></svg>
+          <span class="as-stack"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var ids = ["welcome","connect","first-show","play","tips","intro","lighting","library","play-tab","store","settings","control","workflows","trouble","hardware","glossary"];
+  var links = Array.prototype.slice.call(document.querySelectorAll('.ld-toc-link'));
+
+  function update() {
+    var current = ids[0];
+    for (var i = 0; i < ids.length; i++) {
+      var el = document.getElementById(ids[i]);
+      if (!el) continue;
+      if (el.getBoundingClientRect().top <= 140) current = ids[i];
+    }
+    links.forEach(function (l) {
+      l.classList.toggle('active', (l.getAttribute('href') || '').slice(1) === current);
+    });
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+</body>
+</html>

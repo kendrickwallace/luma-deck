@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LumaDeck — Immersive Light Sync for Hue, WiZ, LIFX &amp; More</title>
+<meta name="description" content="LumaDeck maps lighting scenes onto a video timeline, audio track, or countdown timer. Press play and your Hue, WiZ, LIFX, HomeKit and Govee lights change color, brightness, and effects at every cue. Free on iPhone, iPad and Mac.">
+<meta property="og:title" content="LumaDeck — Immersive Light Sync">
+<meta property="og:description" content="Your smart lights, choreographed to the screen. Free on iPhone, iPad and Mac.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.luma-deck.com/">
+<meta property="og:image" content="https://www.luma-deck.com/assets/img/lumadeck-icon.png">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="assets/img/lumadeck-icon.png">
+<link rel="apple-touch-icon" href="assets/img/lumadeck-icon.png">
+<link rel="stylesheet" href="assets/css/theme.css">
+<link rel="stylesheet" href="assets/css/site.css">
+<style>
+  html { scroll-behavior: smooth; }
+  .ld-ambient { position: fixed; }
+
+  .ld-track { display: flex; flex-direction: column; position: relative; z-index: 10; }
+  .ld-panel { width: 100%; padding: 96px 20px 56px; scroll-margin-top: 80px; }
+  .ld-panel .wrap { width: 100%; max-width: 1180px; margin: 0 auto; }
+  .panel-head { text-align: center; margin-bottom: clamp(24px,3.4vw,44px); }
+  .panel-head h2 { font-size: clamp(28px,3.4vw,44px); line-height: 1.08; letter-spacing: -0.02em; font-weight: 700; margin: 0 0 14px; }
+  .panel-head p { font-size: 16px; color: var(--text-secondary); max-width: 560px; margin: 0 auto; line-height: 1.5; }
+  .panel-head .ld-eyebrow { display: block; margin-bottom: 12px; }
+
+  /* HERO */
+  .hero { display: flex; flex-wrap: wrap; gap: 40px; align-items: center; }
+  .hero-copy { flex: 1 1 440px; min-width: 280px; }
+  .hero-title { font-size: clamp(38px,5vw,64px); line-height: 1.02; letter-spacing: -0.03em; font-weight: 700; margin: 0 0 20px; }
+  .hero-sub { font-size: clamp(16px,1.5vw,19px); line-height: 1.5; color: var(--text-secondary); max-width: 520px; margin: 0 0 30px; }
+  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 26px; }
+  .hero-mono { font-size: 14px; color: var(--text-tertiary); font-family: var(--font-mono); }
+  .works-with { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .hero-art { flex: 1 1 380px; min-width: 280px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .hero-art .art-inner { position: relative; display: flex; align-items: center; justify-content: center; }
+  .hero-art .glow-brand { position: absolute; width: 78%; height: 78%; border-radius: 50%; background: var(--gradient-brand); background-size: 200% auto; filter: blur(60px); opacity: .4; animation: ld-shimmer 7s linear infinite; }
+  .hero-art .glow-amber { position: absolute; width: 52%; height: 52%; border-radius: 50%; background: radial-gradient(circle, var(--amber-500), transparent 70%); filter: blur(38px); opacity: .35; }
+  .hero-art img { position: relative; z-index: 1; display: block; width: min(460px,90%); height: auto; animation: ld-bob 8s ease-in-out infinite; }
+
+  /* STEP GRID */
+  .step-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 16px; }
+  .step-card { padding: 24px; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 18px; transition: border-color var(--duration-base) var(--ease-standard), transform var(--duration-base) var(--ease-standard); }
+  .step-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .step-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .step-num { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--text-tertiary); }
+  .step-ic { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 12px; background: var(--amber-tint); color: var(--accent); }
+  .step-card h3 { font-size: 18px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 7px; }
+  .step-card p { font-size: 14px; line-height: 1.5; color: var(--text-secondary); margin: 0; }
+
+  /* FEATURES */
+  .seg-wrap { display: flex; justify-content: center; margin-bottom: 28px; }
+  .seg { display: inline-flex; gap: 4px; padding: 5px; background: var(--surface-segment); border: 1px solid var(--border-subtle); border-radius: 999px; flex-wrap: wrap; justify-content: center; }
+  .seg button { border: none; cursor: pointer; font-family: var(--font-sans); font-weight: 600; font-size: 14px; letter-spacing: -0.01em; padding: 10px 20px; border-radius: 999px; background: transparent; color: var(--text-secondary); transition: background var(--duration-base) var(--ease-standard), color var(--duration-base) var(--ease-standard); }
+  .seg button.active { background: var(--accent); color: var(--on-accent); box-shadow: var(--glow-amber-soft); }
+  .feat-panel { background: var(--surface-panel); border: 1px solid var(--border-subtle); border-radius: 24px; padding: clamp(20px,3vw,32px); }
+  .feat { display: flex; flex-wrap: wrap; gap: 36px; align-items: center; animation: ld-riseIn .45s var(--ease-out) both; }
+  .feat[hidden] { display: none; }
+  .feat-copy { flex: 1 1 300px; min-width: 280px; }
+  .feat-ic { display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px; border-radius: 14px; background: var(--amber-tint); color: var(--accent); margin-bottom: 16px; }
+  .feat-copy h3 { font-size: clamp(23px,2.4vw,30px); font-weight: 700; letter-spacing: -0.02em; margin: 0 0 12px; }
+  .feat-copy > p { font-size: 15px; line-height: 1.55; color: var(--text-secondary); margin: 0 0 20px; }
+  .feat-list { display: flex; flex-direction: column; gap: 11px; }
+  .feat-list .row { display: flex; align-items: flex-start; gap: 11px; }
+  .feat-list .check { flex: none; margin-top: 2px; display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border-radius: 50%; background: var(--amber-tint); color: var(--accent); }
+  .feat-list .row span:last-child { font-size: 15px; line-height: 1.4; }
+  .feat-media { flex: 1 1 380px; min-width: 300px; }
+  .feat-media .frame { border-radius: 18px; overflow: hidden; border: 1px solid var(--border-default); box-shadow: var(--shadow-lg); }
+  .feat-media img { display: block; width: 100%; height: auto; }
+
+  /* SHAMAN */
+  .shaman { position: relative; overflow: hidden; border-radius: 28px; border: 1px solid var(--border-default); background: var(--surface-panel); padding: clamp(30px,5vw,56px); }
+  .shaman .wash { position: absolute; inset: 0; background: var(--gradient-brand); background-size: 200% auto; opacity: 0.16; animation: ld-shimmer 8s linear infinite; }
+  .shaman .blob { position: absolute; top: -40%; right: -6%; width: 460px; height: 460px; border-radius: 50%; background: radial-gradient(circle, var(--neon-magenta), transparent 66%); filter: blur(40px); opacity: .4; }
+  .shaman-inner { position: relative; display: flex; flex-wrap: wrap; gap: 40px; align-items: center; }
+  .shaman-copy { flex: 1 1 380px; min-width: 290px; }
+  .shaman-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(10,10,11,0.5); border: 1px solid var(--border-default); margin-bottom: 20px; }
+  .shaman-badge span { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .shaman-copy h2 { font-size: clamp(28px,3.6vw,46px); line-height: 1.06; letter-spacing: -0.02em; font-weight: 700; margin: 0 0 14px; }
+  .shaman-copy > p { font-size: 16px; line-height: 1.55; color: var(--text-secondary); max-width: 520px; margin: 0 0 22px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+  .chip { padding: 8px 14px; border-radius: 999px; background: rgba(10,10,11,0.5); border: 1px solid var(--border-subtle); font-size: 13px; color: var(--text-secondary); }
+  .shaman-buy { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .shaman-buy .price { font-family: var(--font-mono); font-size: 15px; color: var(--text-secondary); }
+  .shaman-art { flex: 0 1 280px; min-width: 220px; display: flex; justify-content: center; }
+  .shaman-art .wrap2 { position: relative; }
+  .shaman-art .halo { position: absolute; inset: -18px; border-radius: 26px; background: var(--gradient-brand); filter: blur(26px); opacity: .55; }
+  .shaman-art img { position: relative; width: min(240px,55vw); height: auto; border-radius: 26px; border: 1px solid var(--border-default); box-shadow: var(--shadow-lg); }
+
+  /* USE CASES */
+  .use-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(250px,1fr)); gap: 16px; margin-bottom: 28px; }
+  .use-card { position: relative; min-height: 280px; border-radius: 20px; overflow: hidden; border: 1px solid var(--border-subtle); }
+  .use-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform var(--duration-slow) var(--ease-standard); }
+  .use-card:hover img { transform: scale(1.06); }
+  .use-card .scrim { position: absolute; inset: 0; background: var(--scrim-bottom); }
+  .use-card .body { position: absolute; left: 0; right: 0; bottom: 0; padding: 22px; }
+  .use-card .kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--amber-300); margin-bottom: 6px; }
+  .use-card h3 { font-size: 21px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 5px; }
+  .use-card .body p { font-size: 13px; line-height: 1.45; color: var(--text-secondary); margin: 0; }
+  .use-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 18px; }
+  .use-footer .doclinks { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .use-footer .copy { font-size: 14px; color: var(--text-tertiary); font-family: var(--font-mono); }
+
+  /* Side arrows + bottom bar hidden on mobile */
+  .ld-arrow, .ld-bottombar { display: none; }
+
+  /* ============ DESKTOP: locked horizontal deck ============ */
+  @media (min-width: 901px) {
+    html, body { height: 100%; overflow: hidden; }
+    .ld-deck { position: fixed; inset: 0; overflow: hidden; background: var(--bg-app); }
+    .ld-ambient { position: absolute; }
+    .ld-header { position: absolute; top: 0; left: 0; right: 0; background: none; padding: 18px 20px; pointer-events: none; }
+    .ld-header .ld-header-inner { width: auto; margin: 0 auto; gap: 20px; }
+    .ld-track { position: absolute; inset: 0; flex-direction: row; width: 500vw; transition: transform 620ms var(--ease-standard); transform: translateX(calc(var(--panel,0) * -100vw)); }
+    .ld-panel { width: 100vw; height: 100%; overflow-y: auto; display: flex; align-items: center; padding: 104px 40px 72px; }
+    .ld-panel .wrap { width: 100%; }
+
+    .ld-arrow { display: inline-flex; align-items: center; justify-content: center; position: absolute; z-index: 55; top: 50%; transform: translateY(-50%); width: 48px; height: 48px; border-radius: 50%; background: rgba(20,20,22,0.72); backdrop-filter: var(--blur-thin); -webkit-backdrop-filter: var(--blur-thin); border: 1px solid var(--border-default); color: var(--text-primary); cursor: pointer; box-shadow: var(--shadow-md); transition: background var(--duration-fast) var(--ease-standard); }
+    .ld-arrow:hover { background: var(--surface-inset); }
+    .ld-arrow.prev { left: 20px; }
+    .ld-arrow.next { right: 20px; }
+    .ld-arrow[hidden] { display: none; }
+
+    .ld-bottombar { display: flex; justify-content: center; position: absolute; z-index: 55; bottom: 24px; left: 0; right: 0; padding: 0 20px; pointer-events: none; }
+    .ld-bottombar .bar { pointer-events: auto; display: flex; align-items: center; gap: 14px; padding: 8px; background: rgba(20,20,22,0.72); backdrop-filter: var(--blur-thin); -webkit-backdrop-filter: var(--blur-thin); border: 1px solid var(--border-default); border-radius: 999px; box-shadow: var(--shadow-md); max-width: 100%; flex-wrap: wrap; justify-content: center; }
+    .ld-bottombar a.barlink { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border-radius: 999px; color: var(--text-secondary); font-size: 13px; font-weight: 500; transition: background var(--duration-fast) var(--ease-standard), color var(--duration-fast) var(--ease-standard); }
+    .ld-bottombar a.barlink:hover { background: var(--surface-inset); color: var(--text-primary); }
+    .dots { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
+    .dots button { border: none; cursor: pointer; padding: 0; height: 8px; width: 8px; border-radius: 999px; background: var(--ink-500); transition: width var(--duration-base) var(--ease-standard), background var(--duration-base) var(--ease-standard); }
+    .dots button.active { width: 26px; background: var(--accent); box-shadow: var(--glow-amber-soft); }
+  }
+
+  /* On desktop the persistent footer bar already carries these links,
+     so hide the redundant in-body pair. Mobile has no footer bar, so
+     they stay as the only path to the Manual / Demo pages. */
+  @media (min-width: 901px) {
+    .use-footer .doclinks { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    .ld-header { background: linear-gradient(180deg, var(--bg-app) 60%, transparent); }
+    .ld-header .ld-navlinks { display: none; }
+  }
+  @media (max-width: 560px) {
+    .ld-panel { padding-top: 88px; }
+  }
+</style>
+</head>
+<body>
+<div class="ld-deck">
+
+  <!-- ambient glow backdrop -->
+  <div class="ld-ambient" aria-hidden="true">
+    <span class="g-magenta"></span>
+    <span class="g-amber"></span>
+    <span class="g-cyan"></span>
+  </div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="ld-header">
+    <div class="ld-header-inner">
+      <a class="ld-brand" href="#p0" data-panel="0">
+        <img src="assets/img/lumadeck-icon.png" alt="LumaDeck">
+        <span>LumaDeck</span>
+      </a>
+      <nav class="ld-navlinks">
+        <a class="ld-navlink" href="#p1" data-panel="1">How It Works</a>
+        <a class="ld-navlink" href="#p2" data-panel="2">Features</a>
+        <a class="ld-navlink" href="#p3" data-panel="3">The Shaman</a>
+        <a class="ld-navlink" href="#p4" data-panel="4">Use Cases</a>
+      </nav>
+      <a class="ld-download" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">Download</a>
+    </div>
+  </header>
+
+  <!-- ============ TRACK ============ -->
+  <div class="ld-track">
+
+    <!-- ===== PANEL 0 · HOME ===== -->
+    <section class="ld-panel" id="p0">
+      <div class="wrap">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="ld-statuspill" style="margin-bottom:24px;">
+              <span class="dot"></span>
+              <span class="label">Immersive Light Sync · On the App Store</span>
+            </div>
+            <h1 class="hero-title">Your smart lights,<br><span class="ld-gradient-text">choreographed</span> to the screen.</h1>
+            <p class="hero-sub">LumaDeck maps lighting scenes onto a video timeline, an audio track, or a countdown timer. Press play — your Hue, WiZ, LIFX, HomeKit and Govee lights change color, brightness, and effects at every cue.</p>
+            <div class="hero-cta">
+              <a class="ld-appstore" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.2 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.8zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2-.5 2.7-1.3z"/></svg>
+                <span class="as-stack"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span>
+              </a>
+              <span class="hero-mono">Free · iPhone · iPad · Mac</span>
+            </div>
+            <div class="works-with">
+              <span class="ld-eyebrow" style="margin-right:4px;">Works with</span>
+              <span class="ld-badge hue">Hue</span>
+              <span class="ld-badge wiz">WiZ</span>
+              <span class="ld-badge lifx">LIFX</span>
+              <span class="ld-badge homekit">HomeKit</span>
+              <span class="ld-badge govee">Govee</span>
+            </div>
+          </div>
+          <div class="hero-art">
+            <div class="art-inner">
+              <div class="glow-brand"></div>
+              <div class="glow-amber"></div>
+              <img src="assets/img/lumadeck-logo.png" alt="LumaDeck neon logo — an LD monogram with an embedded play triangle and audio waveform">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PANEL 1 · HOW IT WORKS ===== -->
+    <section class="ld-panel" id="p1">
+      <div class="wrap">
+        <div class="panel-head">
+          <span class="ld-eyebrow accent">Show Creator</span>
+          <h2>Build a light show in six steps.</h2>
+          <p>A guided wizard walks you from source to save. Assign a scene at any timestamp, drop in a special effect, and you're live.</p>
+        </div>
+        <div class="step-grid">
+          <div class="step-card">
+            <div class="step-top"><span class="step-num">STEP 1</span><span class="step-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 3v18M17 3v18M2 8h5M17 8h5M2 16h5M17 16h5"/></svg></span></div>
+            <h3>Choose a Source</h3>
+            <p>Sync to a video, an audio track, or a countdown timer from 15 minutes to 6 hours.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-top"><span class="step-num">STEP 2</span><span class="step-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14 0"/><path d="M1.5 9a16 16 0 0 1 21 0"/><path d="M8.5 16.1a6 6 0 0 1 7 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></span></div>
+            <h3>Check Your Lights</h3>
+            <p>Review connection status across every bridge and Wi-Fi light, then refresh in a tap.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-top"><span class="step-num">STEP 3</span><span class="step-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></span></div>
+            <h3>Pick a Group</h3>
+            <p>Select which rooms or light groups the show will control — one or many at once.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-top"><span class="step-num">STEP 4</span><span class="step-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg></span></div>
+            <h3>Build the Timeline</h3>
+            <p>Scrub to any moment and drop in a scene or a special effect like Thunderstorm or Volcano.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-top"><span class="step-num">STEP 5</span><span class="step-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span></div>
+            <h3>Add Triggers</h3>
+            <p>Place manual trigger buttons to fire dramatic effects on demand during playback.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-top"><span class="step-num">STEP 6</span><span class="step-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+            <h3>Name &amp; Save</h3>
+            <p>Review, name your show, and save. It lands in the Control tab, ready to play.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PANEL 2 · FEATURES ===== -->
+    <section class="ld-panel" id="p2">
+      <div class="wrap">
+        <div class="panel-head">
+          <span class="ld-eyebrow accent">A Full Lighting Console</span>
+          <h2 style="margin:0;">Everything a live show needs.</h2>
+        </div>
+        <div class="seg-wrap">
+          <div class="seg" role="tablist">
+            <button class="active" data-tab="control" role="tab" aria-selected="true">Control Console</button>
+            <button data-tab="play" role="tab" aria-selected="false">Play &amp; Cast</button>
+            <button data-tab="effects" role="tab" aria-selected="false">Effects &amp; Scheduler</button>
+          </div>
+        </div>
+        <div class="feat-panel">
+          <div class="feat" data-tab="control">
+            <div class="feat-copy">
+              <span class="feat-ic"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.8 0"/></svg></span>
+              <h3>A live lighting console</h3>
+              <p>The Control tab is mission control: adjust brightness, activate scenes, drive a video or music track, and launch any saved show — all without leaving the tab.</p>
+              <div class="feat-list">
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Per-light and per-zone brightness with warm-to-cool Kelvin control</span></div>
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Universal scenes that span Hue, WiZ, LIFX, HomeKit &amp; Govee at once</span></div>
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Now Playing rail for synced music alongside your video</span></div>
+              </div>
+            </div>
+            <div class="feat-media"><div class="frame"><img src="assets/img/reference-control-tab.png" alt="LumaDeck Control tab console" loading="lazy"></div></div>
+          </div>
+          <div class="feat" data-tab="play" hidden>
+            <div class="feat-copy">
+              <span class="feat-ic"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="13" rx="2"/><polyline points="17 2 12 7 7 2"/></svg></span>
+              <h3>Full-screen playback, phone as remote</h3>
+              <p>Hit play and the video runs while your lights change at every cue. Cast to a TV over AirPlay or HDMI and your phone becomes the remote.</p>
+              <div class="feat-list">
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Rewind 10s, forward 10s, and scrub to any trigger point</span></div>
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Manual trigger buttons fire effects on demand</span></div>
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Plays full-screen on an external display</span></div>
+              </div>
+            </div>
+            <div class="feat-media"><div class="frame"><img src="assets/img/reference-play-tab.png" alt="LumaDeck Play tab full-screen playback" loading="lazy"></div></div>
+          </div>
+          <div class="feat" data-tab="effects" hidden>
+            <div class="feat-copy">
+              <span class="feat-ic"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a2 2 0 0 0 4 0c0-1 0-2-.5-3 2 1 4.5 3.5 4.5 7a6 6 0 1 1-12 0c0-3 2-5 3-6 .5 2 2 2 3-5z"/></svg></span>
+              <h3>Signature effects, on a schedule</h3>
+              <p>Layer named special effects into any timeline, or let the Scheduler automate scenes by time of day — including a Security Mode for when you're away.</p>
+              <div class="feat-list">
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Thunderstorm, Volcano, Flash &amp; Static with tunable brightness and timing</span></div>
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Test any effect on real lights for 10 seconds before saving</span></div>
+                <div class="row"><span class="check"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span><span>Scheduler automates scenes by time of day</span></div>
+              </div>
+            </div>
+            <div class="feat-media"><div class="frame"><img src="assets/img/reference-scheduler.png" alt="LumaDeck Add Effect — choosing an effect type with brightness range and color controls" loading="lazy"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PANEL 3 · THE SHAMAN ===== -->
+    <section class="ld-panel" id="p3">
+      <div class="wrap">
+        <div class="shaman">
+          <div class="wash" aria-hidden="true"></div>
+          <div class="blob" aria-hidden="true"></div>
+          <div class="shaman-inner">
+            <div class="shaman-copy">
+              <div class="shaman-badge">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="color:var(--neon-magenta);" aria-hidden="true"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>
+                <span>The Shaman · AI Generator</span>
+              </div>
+              <h2>Skip the timeline.<br>Let The Shaman build it.</h2>
+              <p>Point it at any video and it analyzes the footage to auto-generate a complete lighting timeline — or pick one of six pre-built one-hour timer themes with Chill, Active, and Intense energy levels.</p>
+              <div class="chips">
+                <span class="chip">Beach Sunset</span>
+                <span class="chip">Bali Jungle</span>
+                <span class="chip">Northern Lights</span>
+                <span class="chip">+ 3 more</span>
+              </div>
+              <div class="shaman-buy">
+                <a class="ld-btn-amber" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">Unlock The Shaman</a>
+                <span class="price">$0.99 add-on</span>
+              </div>
+            </div>
+            <div class="shaman-art">
+              <div class="wrap2">
+                <div class="halo" aria-hidden="true"></div>
+                <img src="assets/img/shaman-icon.jpg" alt="The Shaman — a tiki mask icon" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PANEL 4 · USE CASES ===== -->
+    <section class="ld-panel" id="p4">
+      <div class="wrap">
+        <div class="panel-head">
+          <span class="ld-eyebrow accent">Set the Scene</span>
+          <h2>One app, every kind of night.</h2>
+          <p>From a quiet wind-down to a full DJ set — free on iPhone, iPad and Mac.</p>
+        </div>
+        <div class="use-grid">
+          <div class="use-card">
+            <img src="assets/img/use-home-theater.jpg" alt="" loading="lazy">
+            <div class="scrim"></div>
+            <div class="body"><div class="kicker">Home Theater</div><h3>Movie Night</h3><p>Match room lighting to every scene. Torchlight flickers, storms flash — your walls play along.</p></div>
+          </div>
+          <div class="use-card">
+            <img src="assets/img/video-jungle-day.jpg" alt="" loading="lazy">
+            <div class="scrim"></div>
+            <div class="body"><div class="kicker">Timer Mode</div><h3>Parties</h3><p>Run colorful, timed effects all night — no video needed. Volcano, Thunderstorm and Flash on tap.</p></div>
+          </div>
+          <div class="use-card">
+            <img src="assets/img/use-meditation.jpg" alt="" loading="lazy">
+            <div class="scrim"></div>
+            <div class="body"><div class="kicker">Wind Down</div><h3>Meditation</h3><p>Warm, slowly transitioning scenes on a 30-minute timer — great for yoga, breathwork, calm evenings.</p></div>
+          </div>
+          <div class="use-card">
+            <img src="assets/img/use-holiday.jpg" alt="" loading="lazy">
+            <div class="scrim"></div>
+            <div class="body"><div class="kicker">Create Joy</div><h3>Holiday Events</h3><p>Sync lighting to a holiday experience, fire manual triggers to create surprise and delight.</p></div>
+          </div>
+        </div>
+        <div class="use-footer">
+          <a class="ld-appstore sm" href="https://apps.apple.com/us/app/lumadeck-immersive-light-sync/id6758977004" target="_blank" rel="noopener">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.8-.8-3-.8-1.5 0-3 .9-3.8 2.3-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.2 0 2-1.1 2.8-2.2.9-1.3 1.2-2.5 1.3-2.6-.1 0-2.5-1-2.5-3.8zM14.1 5.6c.6-.8 1.1-1.9 1-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2-.5 2.7-1.3z"/></svg>
+            <span class="as-stack"><span class="as-small">Download on the</span><span class="as-big">App Store</span></span>
+          </a>
+          <div class="doclinks">
+            <a class="ld-outline" href="manual.html">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+              User Manual
+            </a>
+            <a class="ld-outline" href="demo.html">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"/></svg>
+              Product Demo
+            </a>
+          </div>
+          <span class="copy">© 2026 LumaDeck · Immersive Light Sync</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ SIDE ARROWS (desktop) ============ -->
+  <button class="ld-arrow prev" type="button" aria-label="Previous section" hidden>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="ld-arrow next" type="button" aria-label="Next section">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <!-- ============ BOTTOM BAR (desktop) ============ -->
+  <div class="ld-bottombar">
+    <div class="bar">
+      <a class="barlink" href="manual.html">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        User Manual
+      </a>
+      <span class="ld-divider"></span>
+      <div class="dots" role="tablist" aria-label="Sections">
+        <button data-panel="0" class="active" aria-label="Home" title="Home"></button>
+        <button data-panel="1" aria-label="How It Works" title="How It Works"></button>
+        <button data-panel="2" aria-label="Features" title="Features"></button>
+        <button data-panel="3" aria-label="The Shaman" title="The Shaman"></button>
+        <button data-panel="4" aria-label="Use Cases" title="Use Cases"></button>
+      </div>
+      <span class="ld-divider"></span>
+      <a class="barlink" href="demo.html">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"/></svg>
+        Product Demo
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  var PANELS = 5;
+  var cur = 0;
+  var desktop = window.matchMedia('(min-width: 901px)');
+  var root = document.documentElement;
+  var navlinks = Array.prototype.slice.call(document.querySelectorAll('.ld-navlink'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('.dots button'));
+  var prevArrow = document.querySelector('.ld-arrow.prev');
+  var nextArrow = document.querySelector('.ld-arrow.next');
+
+  function sync() {
+    root.style.setProperty('--panel', cur);
+    navlinks.forEach(function (l) { l.classList.toggle('active', +l.dataset.panel === cur); });
+    dots.forEach(function (d) { d.classList.toggle('active', +d.dataset.panel === cur); });
+    if (prevArrow) prevArrow.hidden = cur === 0;
+    if (nextArrow) nextArrow.hidden = cur === PANELS - 1;
+  }
+  function go(i) {
+    cur = Math.max(0, Math.min(PANELS - 1, i));
+    sync();
+  }
+
+  // Panel navigation targets (brand, nav links, dots)
+  Array.prototype.slice.call(document.querySelectorAll('[data-panel]')).forEach(function (el) {
+    el.addEventListener('click', function (e) {
+      var i = +el.dataset.panel;
+      if (desktop.matches) { e.preventDefault(); go(i); }
+      else { cur = i; sync(); } // let the anchor scroll happen; keep state in sync
+    });
+  });
+
+  if (prevArrow) prevArrow.addEventListener('click', function () { go(cur - 1); });
+  if (nextArrow) nextArrow.addEventListener('click', function () { go(cur + 1); });
+
+  document.addEventListener('keydown', function (e) {
+    if (!desktop.matches) return;
+    if (e.key === 'ArrowRight') go(cur + 1);
+    else if (e.key === 'ArrowLeft') go(cur - 1);
+  });
+
+  // Re-sync when crossing the breakpoint
+  (desktop.addEventListener ? desktop.addEventListener('change', sync) : desktop.addListener(sync));
+
+  // Features segmented control
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
+  var panes = Array.prototype.slice.call(document.querySelectorAll('.feat'));
+  tabs.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var key = btn.dataset.tab;
+      tabs.forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      panes.forEach(function (p) { p.hidden = p.dataset.tab !== key; });
+    });
+  });
+
+  sync();
+})();
+</script>
+</body>
+</html>

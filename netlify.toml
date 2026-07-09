@@ -1,0 +1,20 @@
+# Netlify configuration for www.luma-deck.com
+# The site is a plain static build — no build step required.
+
+[build]
+  publish = "public"
+  command = ""
+
+# Long-cache the fingerprint-free static assets (images/CSS change rarely;
+# bump filenames if you need to force a refresh).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# Security niceties
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
